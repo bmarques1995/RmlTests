@@ -1,0 +1,32 @@
+{
+  "git": {
+    "location": "https://github.com/libsdl-org/SDL.git",
+    "output_suffix": "sdl3",
+    "branch": "main",
+    "commit": "683181b47cfabd293e3ea409f838915b8297a4fd"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [  ],
+    "targets": [ "install" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

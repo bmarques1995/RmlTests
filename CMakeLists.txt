@@ -11,5 +11,9 @@ endif()
 
 project ("RmlTests")
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_helpers")
+include(dep_tracer)
+include(target_destination)
+
 # Inclua subprojetos.
 add_subdirectory ("RmlTests")

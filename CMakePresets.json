@@ -6,7 +6,6 @@
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe"
@@ -21,20 +20,24 @@
             "name": "windows-debug",
             "displayName": "Windows Debug",
             "inherits": "windows-base",
+            "installDir": "${sourceDir}/Windows/Debug",
             "architecture": {
                 "value": "windows",
                 "strategy": "external"
             },
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_PREFIX_PATH": "${sourceDir}/Windows/Debug"
             }
         },
         {
             "name": "windows-release",
             "displayName": "Windows Release",
             "inherits": "windows-debug",
+            "installDir": "${sourceDir}/Windows/Release",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_PREFIX_PATH": "${sourceDir}/Windows/Release"
             }
         }
     ]
