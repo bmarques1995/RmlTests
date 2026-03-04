@@ -1,0 +1,32 @@
+{
+  "git": {
+    "location": "https://github.com/harfbuzz/harfbuzz.git",
+    "output_suffix": "harfbuzz",
+    "branch": "main",
+    "commit": "b42511e071162fe76102f613a6ccc009726c99af"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "BUILD_SHARED_LIBS=ON" ],
+    "targets": [ "install" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

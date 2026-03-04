@@ -1,0 +1,32 @@
+{
+  "git": {
+    "location": "https://gitlab.freedesktop.org/freetype/freetype.git",
+    "output_suffix": "freetype",
+    "branch": "master",
+    "commit": "526ec5c47b9ebccc4754c85ac0c0cdf7c85a5e9b"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "BUILD_SHARED_LIBS=ON", "FT_REQUIRE_ZLIB=ON", "FT_REQUIRE_PNG=ON", "FT_REQUIRE_HARFBUZZ=ON", "FT_REQUIRE_BROTLI=ON" ],
+    "targets": [ "install" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

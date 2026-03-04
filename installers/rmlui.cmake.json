@@ -1,0 +1,32 @@
+{
+  "git": {
+      "location": "https://github.com/mikke89/RmlUi.git",
+      "output_suffix": "rmlui",
+      "branch": "master",
+      "commit": "2230d1a6e8e0848ed87a5761e2a5160b2a175ba4"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [ "RMLUI_SVG_PLUGIN=ON" ],
+    "targets": [ "install" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}

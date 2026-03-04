@@ -1,4 +1,4 @@
-﻿// RmlTests.cpp: define o ponto de entrada para o aplicativo.
+// RmlTests.cpp: define o ponto de entrada para o aplicativo.
 //
 
 #include "RmlTests.hpp"
@@ -17,23 +17,23 @@ int main(int argc, char** argv)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    SDL_Window *window = SDL_CreateWindow(
+    SDL_Window *m_Window = SDL_CreateWindow(
         "SDL3 + glad2",
         800,
         600,
-        SDL_WINDOW_OPENGL
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
     );
 
-    if (!window) {
+    if (!m_Window) {
         printf("Window creation failed: %s\n", SDL_GetError());
         SDL_Quit();
         return -1;
     }
 
-    SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+    SDL_GLContext gl_context = SDL_GL_CreateContext(m_Window);
     if (!gl_context) {
         printf("GL context creation failed: %s\n", SDL_GetError());
-        SDL_DestroyWindow(window);
+        SDL_DestroyWindow(m_Window);
         SDL_Quit();
         return -1;
     }
@@ -42,7 +42,7 @@ int main(int argc, char** argv)
     if (!gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress)) {
         printf("Failed to initialize glad2\n");
         SDL_GL_DestroyContext(gl_context);
-        SDL_DestroyWindow(window);
+        SDL_DestroyWindow(m_Window);
         SDL_Quit();
         return -1;
     }
@@ -63,11 +63,12 @@ int main(int argc, char** argv)
         glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        SDL_GL_SwapWindow(window);
+        SDL_GL_SwapWindow(m_Window);
+        SDL_GL_SetSwapInterval(1);
     }
 
     SDL_GL_DestroyContext(gl_context);
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(m_Window);
     SDL_Quit();
 
     return 0;

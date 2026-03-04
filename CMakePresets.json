@@ -22,7 +22,7 @@
             "inherits": "windows-base",
             "installDir": "${sourceDir}/Windows/Debug",
             "architecture": {
-                "value": "windows",
+                "value": "x64",
                 "strategy": "external"
             },
             "cacheVariables": {
