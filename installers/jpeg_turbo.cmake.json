@@ -1,0 +1,32 @@
+{
+  "git": {
+    "location": "https://github.com/libjpeg-turbo/libjpeg-turbo.git",
+    "output_suffix": "libjpeg_turbo",
+    "branch": "main",
+    "commit": "af9c1c268520a29adf98cad5138dafe612b3d318"
+  },
+  "cmake": {
+    "build_system": "default",
+    "relative_root_location": "",
+    "flags": [  ],
+    "targets": [ "install" ],
+    "os_properties": {
+      "windows": {
+        "c_compiler": "cl",
+        "cxx_compiler": "cl"
+      },
+      "linux": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "macos": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      },
+      "freebsd": {
+        "c_compiler": "clang",
+        "cxx_compiler": "clang++"
+      }
+    }
+  }
+}
