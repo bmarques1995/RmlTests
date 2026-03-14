@@ -33,8 +33,10 @@ RmlTests::SDL3Window::SDL3Window(uint32_t width, uint32_t height, std::string ti
         m_WindowTitle.c_str(),
         m_Width,
         m_Height,
-        SDL_WINDOW_RESIZABLE
+        SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN
     );
+    
+    SDL_ShowWindow(m_Window);
 }
 
 RmlTests::SDL3Window::~SDL3Window()
@@ -71,11 +73,13 @@ void RmlTests::SDL3Window::EventLoop()
         auto app = Application::GetInstance();
         if (event.type == SDL_EVENT_QUIT)
             app->ProcessQuit();
-        if (event.type == SDL_EVENT_WINDOW_RESIZED && event.window.windowID == SDL_GetWindowID(m_Window))
+        if (event.type == SDL_EVENT_WINDOW_RESIZED)
         {
-            m_Width = event.window.data1;
-            m_Height = event.window.data2;
-            app->ProcessResize(event.window.data1, event.window.data2);
+            int w, h;
+            SDL_GetWindowSizeInPixels(m_Window, &w, &h);
+            m_Width = w;
+            m_Height = h;
+            app->ProcessResize(m_Width, m_Height);
         }   
     }
 }

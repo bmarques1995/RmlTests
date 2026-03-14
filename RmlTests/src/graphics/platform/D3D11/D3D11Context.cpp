@@ -8,22 +8,29 @@ RmlTests::D3D11Context::D3D11Context(HWND windowHandle, uint32_t width, uint32_t
 
     DXGI_SWAP_CHAIN_DESC scd = {};
     scd.BufferCount = 2;
-    scd.BufferDesc.Width = width;
-    scd.BufferDesc.Height = height;
+    scd.BufferDesc.Width = 0;
+    scd.BufferDesc.Height = 0;
     scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    scd.BufferDesc.RefreshRate.Numerator = 60;
+    scd.BufferDesc.RefreshRate.Denominator = 1;
+    scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
     scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     scd.OutputWindow = windowHandle;
     scd.SampleDesc.Count = 1;
+    scd.SampleDesc.Quality = 0;
     scd.Windowed = TRUE;
-    scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+
+    D3D_FEATURE_LEVEL featureLevel;
+    const D3D_FEATURE_LEVEL featureLevelArray[3] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_0, };
 
     HRESULT hr = D3D11CreateDeviceAndSwapChain(
         nullptr,
         D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
         0,
-        nullptr,
-        0,
+        featureLevelArray,
+        3,
         D3D11_SDK_VERSION,
         &scd,
         m_SwapChain.GetAddressOf(),
@@ -35,17 +42,10 @@ RmlTests::D3D11Context::D3D11Context(HWND windowHandle, uint32_t width, uint32_t
     assert(hr == S_OK);
 
     // Create Render Target View
-    ComPtr<ID3D11Texture2D> backbuffer;
-    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)backbuffer.GetAddressOf());
-    if (backbuffer.Get() != nullptr)
-    {
-        m_Device->CreateRenderTargetView(backbuffer.Get(), nullptr, m_RenderTargetView.GetAddressOf());
-        backbuffer->Release();
-    }
-    else
-    {
-        exit(65);
-    }
+    ID3D11Texture2D* backbuffer;
+    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &backbuffer);
+    m_Device->CreateRenderTargetView(backbuffer, nullptr, m_RenderTargetView.GetAddressOf());
+    backbuffer->Release();
 
     m_Viewport = {};
     m_Viewport.Width = width * 1.0f;
@@ -88,20 +88,15 @@ void RmlTests::D3D11Context::Present()
 
 void RmlTests::D3D11Context::OnResize(uint32_t width, uint32_t height)
 {
-    m_RenderTargetView->Release();
-    m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+    m_RenderTargetView.Reset();
+    m_RenderTargetView = nullptr;
+    HRESULT hr = m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
     // Create Render Target View
-    ComPtr<ID3D11Texture2D> backbuffer;
-    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)backbuffer.GetAddressOf());
-    if (backbuffer.Get() != nullptr)
-    {
-        m_Device->CreateRenderTargetView(backbuffer.Get(), nullptr, m_RenderTargetView.GetAddressOf());
-        backbuffer->Release();
-    }
-    else
-    {
-        exit(65);
-    }
+    ID3D11Texture2D* backbuffer;
+    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbuffer);
+    m_Device->CreateRenderTargetView(backbuffer, nullptr, m_RenderTargetView.GetAddressOf());
+    backbuffer->Release();
+
     m_Viewport = {};
     m_Viewport.Width = width * 1.0f;
     m_Viewport.Height = height * 1.0f;
