@@ -20,11 +20,15 @@ file(GLOB_RECURSE RMLT_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.cpp")
 file(GLOB_RECURSE RMLT_HDRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "src/*.hpp")
 
 add_executable(${TARGET_NAME} ${RMLT_SRCS} ${RMLT_HDRS})
-target_link_libraries(${TARGET_NAME} PUBLIC SDL3::SDL3 glad::glad PNG::png_shared libjpeg-turbo::jpeg RmlUi::RmlUi)
+target_link_libraries(${TARGET_NAME} PUBLIC SDL3::SDL3 PNG::png_shared libjpeg-turbo::jpeg RmlUi::RmlUi)
 if(WIN32)
 	target_link_libraries(${TARGET_NAME} PUBLIC dxgi dxguid d3d11)
+	#set_target_properties(${TARGET_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
+	target_link_options(${TARGET_NAME} PRIVATE "/ENTRY:mainCRTStartup")
 endif()
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src
+												 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/window/shared
+												 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/window/platform
 												 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/graphics/shared
 												 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/graphics/platform)
 set_cxx_project_standards(${TARGET_NAME} 20 FALSE)

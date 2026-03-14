@@ -102,4 +102,10 @@ void RmlTests::D3D11Context::OnResize(uint32_t width, uint32_t height)
     {
         exit(65);
     }
+    m_Viewport = {};
+    m_Viewport.Width = width * 1.0f;
+    m_Viewport.Height = height * 1.0f;
+    m_Viewport.MinDepth = 0.0f;
+    m_Viewport.MaxDepth = 1.0f;
+    m_Context->RSSetViewports(1, &m_Viewport);
 }
