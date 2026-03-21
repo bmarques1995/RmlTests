@@ -6,7 +6,6 @@
 set(TARGET_NAME RmlTests)
 
 trace_dependency(NAME SDL3 INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/sdl.cmake.json")
-trace_dependency(NAME glad INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/glad.cmake.json")
 trace_dependency(NAME ZLIB INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/zlib.cmake.json")
 trace_dependency(NAME PNG INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/png.cmake.json")
 trace_dependency(NAME harfbuzz INSTALL_SCRIPT "${PROJECT_SOURCE_DIR}/installers/harfbuzz.cmake.json")

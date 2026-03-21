@@ -36,23 +36,19 @@ RmlTests::D3D11Context::D3D11Context(HWND windowHandle, uint32_t width, uint32_t
         m_SwapChain.GetAddressOf(),
         m_Device.GetAddressOf(),
         nullptr,
-        m_Context.GetAddressOf()
+        m_DeviceContext.GetAddressOf()
     );
 
     assert(hr == S_OK);
 
-    // Create Render Target View
-    ID3D11Texture2D* backbuffer;
-    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**) &backbuffer);
-    m_Device->CreateRenderTargetView(backbuffer, nullptr, m_RenderTargetView.GetAddressOf());
-    backbuffer->Release();
+    CreateRTV();
 
     m_Viewport = {};
     m_Viewport.Width = width * 1.0f;
     m_Viewport.Height = height * 1.0f;
     m_Viewport.MinDepth = 0.0f;
     m_Viewport.MaxDepth = 1.0f;
-    m_Context->RSSetViewports(1, &m_Viewport);
+    m_DeviceContext->RSSetViewports(1, &m_Viewport);
 }
 
 RmlTests::D3D11Context::~D3D11Context()
@@ -69,8 +65,8 @@ void RmlTests::D3D11Context::SetClearColor(float r, float g, float b, float a)
 
 void RmlTests::D3D11Context::ReceiveCommands()
 {
-    m_Context->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), nullptr);
-    m_Context->ClearRenderTargetView(m_RenderTargetView.Get(), m_ClearColor);
+    m_DeviceContext->OMSetRenderTargets(1, m_RenderTargetView.GetAddressOf(), nullptr);
+    m_DeviceContext->ClearRenderTargetView(m_RenderTargetView.Get(), m_ClearColor);
 }
 
 void RmlTests::D3D11Context::DispatchCommands()
@@ -86,21 +82,33 @@ void RmlTests::D3D11Context::Present()
     m_SwapChain->Present(1, 0);
 }
 
+std::any RmlTests::D3D11Context::GetControllers()
+{
+    D3D11RenderControllers controllers = { m_Device.Get(), m_DeviceContext.Get() };
+    return controllers;
+}
+
 void RmlTests::D3D11Context::OnResize(uint32_t width, uint32_t height)
 {
     m_RenderTargetView.Reset();
     m_RenderTargetView = nullptr;
     HRESULT hr = m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
-    // Create Render Target View
-    ID3D11Texture2D* backbuffer;
-    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbuffer);
-    m_Device->CreateRenderTargetView(backbuffer, nullptr, m_RenderTargetView.GetAddressOf());
-    backbuffer->Release();
+    
+    CreateRTV();
 
     m_Viewport = {};
     m_Viewport.Width = width * 1.0f;
     m_Viewport.Height = height * 1.0f;
     m_Viewport.MinDepth = 0.0f;
     m_Viewport.MaxDepth = 1.0f;
-    m_Context->RSSetViewports(1, &m_Viewport);
+    m_DeviceContext->RSSetViewports(1, &m_Viewport);
+}
+
+void RmlTests::D3D11Context::CreateRTV()
+{
+    ID3D11Texture2D* backbuffer;
+    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backbuffer);
+    assert(backbuffer != nullptr);
+    m_Device->CreateRenderTargetView(backbuffer, nullptr, m_RenderTargetView.GetAddressOf());
+    backbuffer->Release();
 }

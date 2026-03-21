@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <any>
+#include <RmlUi/Core/RenderInterface.h>
 
 namespace RmlTests
 {
@@ -20,8 +21,11 @@ namespace RmlTests
         virtual void Draw(uint32_t elements) = 0;
         virtual void Present() = 0;
 
+        virtual std::any GetControllers() = 0;
+
         virtual void OnResize(uint32_t width, uint32_t height) = 0;
 
         static GraphicsContext* Create(GRAPHICS_API api, std::any window, uint32_t width, uint32_t height);
+        static Rml::RenderInterface* CreateRMLRenderInterface(GRAPHICS_API api, std::any startupData);
     };
 }

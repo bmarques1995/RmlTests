@@ -1,5 +1,6 @@
 #include "Window.hpp"
 #include "SDL3/SDL3Window.hpp"
+#include "SDL3/SDL3SystemInterface.hpp"
 
 RmlTests::Window::Window()
 {
@@ -25,6 +26,11 @@ RmlTests::Window* RmlTests::Window::Create()
 RmlTests::Window* RmlTests::Window::Create(uint32_t width, uint32_t height, std::string title)
 {
     return new SDL3Window(width, height, title);
+}
+
+Rml::SystemInterface* RmlTests::Window::CreateRMLSystemInterface(std::shared_ptr<Window> window)
+{
+    return new SDL3SystemInterface(window);
 }
 
 uint32_t RmlTests::Window::GetWidth() const
