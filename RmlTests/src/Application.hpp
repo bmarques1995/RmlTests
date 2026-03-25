@@ -25,6 +25,8 @@ namespace RmlTests
 	private:
 		bool m_Running;
 
+		static bool LoadBytes(std::string_view path, std::vector<uint8_t>* outBuffer);
+
 		static void EnableSingleton(Application* app);
 		static Application* s_Instance;
 
@@ -32,6 +34,7 @@ namespace RmlTests
 		Rml::Context* m_RmlContext;
 		RmlTests::GRAPHICS_API m_API;
 		//RmlTests::GRAPHICS_API m_API = RmlTests::GRAPHICS_API::D3D11;
+		Rml::ElementDocument* m_Document;
 		std::shared_ptr<RmlTests::GraphicsContext> m_Context;
 
 		std::shared_ptr<Rml::RenderInterface> m_RMLRenderInterface;

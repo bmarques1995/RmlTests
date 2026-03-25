@@ -5,6 +5,8 @@
 #endif
 
 #include <cassert>
+#include "RmlInline.hpp"
+#include <fstream>
 
 RmlTests::Application* RmlTests::Application::s_Instance = nullptr;
 
@@ -27,14 +29,26 @@ RmlTests::Application::Application() :
 
     Rml::SetSystemInterface(m_RMLSystemInterface.get());
     Rml::SetRenderInterface(m_RMLRenderInterface.get());
-    Rml::Initialise();
-    m_RmlContext = Rml::CreateContext("main", Rml::Vector2i(m_Window->GetWidth(), m_Window->GetHeight()));
-    assert(m_RmlContext != nullptr);
-    Rml::LoadFontFace("C:/Users/bruno/AppData/Local/Microsoft/Windows/Fonts/Roboto-Medium.ttf");
+    {
+        Rml::Initialise();
+        m_RmlContext = Rml::CreateContext("main", Rml::Vector2i(m_Window->GetWidth(), m_Window->GetHeight()));
+        assert(m_RmlContext != nullptr);
+        std::vector<uint8_t> robotoMediumFont;
+        assert(LoadBytes("C:/Users/bruno/AppData/Local/Microsoft/Windows/Fonts/Roboto-Medium.ttf", &robotoMediumFont));
+        Rml::Span<const Rml::byte> robotoMediumFontRml(robotoMediumFont.data(), robotoMediumFont.size());
+        auto result = Rml::LoadFontFace(robotoMediumFontRml, "Roboto-Medium", Rml::Style::FontStyle::Normal, Rml::Style::FontWeight::Auto);
+        assert(result);
+
+        m_Document = m_RmlContext->LoadDocumentFromMemory(InlineRmls::rmlSample, "inline.rml");
+        assert(m_Document != nullptr);
+        m_Document->Show();
+    }
 }
 
 RmlTests::Application::~Application()
 {
+    m_Document->Close();
+    m_RmlContext->Update();
     Rml::RemoveContext("main");
     Rml::Shutdown();
     m_RMLRenderInterface.reset();
@@ -49,6 +63,7 @@ void RmlTests::Application::Run()
 	{
         m_Window->Update();
         m_Context->ReceiveCommands();
+        m_RmlContext->Render();
         m_Context->DispatchCommands();
         m_Context->Present();
 	}
@@ -72,6 +87,30 @@ RmlTests::Application* RmlTests::Application::GetInstance()
 Rml::Context* RmlTests::Application::GetRmlContext()
 {
     return m_RmlContext;
+}
+
+bool RmlTests::Application::LoadBytes(std::string_view path, std::vector<uint8_t>* outBuffer)
+{
+    bool loaded = false;
+    std::ifstream fileStream;
+    fileStream.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+    try
+    {
+        fileStream.open(path.data(), std::ios::binary);
+        loaded = true;
+    }
+    catch (...)
+    {
+        return loaded;
+    }
+    auto start = fileStream.tellg();
+    fileStream.seekg(0, std::ios::end);
+    uint64_t fsize = fileStream.tellg() - start;
+    fileStream.seekg(0, std::ios::beg);
+    outBuffer->reserve(fsize);
+    outBuffer->resize(fsize);
+    fileStream.read(reinterpret_cast<char*>(&(*outBuffer)[0]), fsize);
+    return loaded;
 }
 
 void RmlTests::Application::EnableSingleton(Application* app)

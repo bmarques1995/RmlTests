@@ -32,4 +32,14 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRE
 												 $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>/src/graphics/platform)
 set_cxx_project_standards(${TARGET_NAME} 20 FALSE)
 
+get_target_property(TARGET_RUNDIR ${TARGET_NAME} RUNTIME_OUTPUT_DIRECTORY)
+
+add_custom_target(copy_resources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/shaders
+        ${TARGET_RUNDIR}/shaders
+        COMMENT "Copying resources into binary directory")
+
+add_dependencies(${TARGET_NAME} copy_resources)
+
 # TODO: Adicione testes e instale destinos, se necessário.

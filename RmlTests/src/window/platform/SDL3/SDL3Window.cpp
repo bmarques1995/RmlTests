@@ -55,7 +55,7 @@ void RmlTests::SDL3Window::ShutdownCursorMap()
 }
 
 RmlTests::SDL3Window::SDL3Window(uint32_t width, uint32_t height, std::string title) : 
-    RmlTests::Window()
+    RmlTests::Window(width, height, title)
 {
     InitSDL();
     m_Window = SDL_CreateWindow(
