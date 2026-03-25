@@ -63,6 +63,7 @@ void RmlTests::Application::Run()
 	{
         m_Window->Update();
         m_Context->ReceiveCommands();
+        m_RmlContext->Update();
         m_RmlContext->Render();
         m_Context->DispatchCommands();
         m_Context->Present();
